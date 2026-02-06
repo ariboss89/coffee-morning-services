@@ -23,7 +23,39 @@ func NewAuthService(authRepository *repository.AuthRepository, rdb *redis.Client
 	return &AuthService{authRepository: authRepository, redis: rdb, db: db}
 }
 
+// func (a AuthService) Register(ctx context.Context, newUser dto.RegisterRequest) (dto.RegisterResponse, error) {
+// 	hc := hash.HashConfig{}
+// 	hc.UseRecommended()
+
+// 	hp, err := hc.GenHash(newUser.Password)
+// 	if err != nil {
+// 		return dto.RegisterResponse{}, err
+// 	}
+// 	newUser.Password = hp
+// 	if err := a.authRepository.Register(ctx, a.db, newUser); err != nil {
+// 		return dto.RegisterResponse{}, err
+// 	}
+
+// 	response := dto.RegisterResponse{
+// 		ResponseSuccess: dto.ResponseSuccess{
+// 			Message: "New Account Registered !",
+// 			Status:  "Success",
+// 		},
+// 	}
+
+// 	return response, nil
+// }
+
 func (a AuthService) Register(ctx context.Context, newUser dto.RegisterRequest) (dto.RegisterResponse, error) {
+	tx, err := a.db.Begin(ctx)
+
+	if err != nil {
+		log.Println(err)
+		return dto.RegisterResponse{
+			ResponseSuccess: dto.ResponseSuccess{},
+		}, err
+	}
+
 	hc := hash.HashConfig{}
 	hc.UseRecommended()
 
@@ -32,8 +64,20 @@ func (a AuthService) Register(ctx context.Context, newUser dto.RegisterRequest) 
 		return dto.RegisterResponse{}, err
 	}
 	newUser.Password = hp
-	if err := a.authRepository.Register(ctx, a.db, newUser); err != nil {
+	data, err := a.authRepository.Register(ctx, tx, newUser)
+
+	if err != nil {
 		return dto.RegisterResponse{}, err
+	}
+	defer tx.Rollback(ctx)
+
+	if err = a.authRepository.InsertUsers(ctx, tx, data); err != nil {
+		return dto.RegisterResponse{}, err
+	}
+
+	if e := tx.Commit(ctx); e != nil {
+		log.Println("failed to commit", e.Error())
+		return dto.RegisterResponse{}, e
 	}
 
 	response := dto.RegisterResponse{

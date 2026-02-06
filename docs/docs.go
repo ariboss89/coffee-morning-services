@@ -154,6 +154,119 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update Profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Full Name",
+                        "name": "fullname",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bio",
+                        "name": "bio",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Update Avatar",
+                        "name": "avatar_file",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Profiles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseSuccess"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -227,6 +340,9 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "Success"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

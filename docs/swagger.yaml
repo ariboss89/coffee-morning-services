@@ -50,6 +50,8 @@ definitions:
       status:
         example: Success
         type: string
+      user_id:
+        type: integer
     type: object
   dto.ResponseError:
     properties:
@@ -169,6 +171,77 @@ paths:
       summary: Register new user
       tags:
       - Auth
+  /user/:
+    patch:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Full Name
+        in: formData
+        name: fullname
+        type: string
+      - description: Bio
+        in: formData
+        name: bio
+        type: string
+      - description: Update Avatar
+        in: formData
+        name: avatar_file
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Update Profile
+      tags:
+      - user
+  /user/profile:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseSuccess'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Get User Profiles
+      tags:
+      - user
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by space and JWT Token

@@ -18,4 +18,12 @@ type LoginResponse struct {
 
 type RegisterResponse struct {
 	ResponseSuccess
+	UserId int `json:"user_id,omitempty"`
+}
+
+type UserResponse struct {
+	Fullname string `json:"fullname,omitempty"`
+	//AvatarFile *multipart.FileHeader `json:"avatar_file,omitempty"`
+	Avatar string `json:"avatar"`
+	Bio    string `json:"bio"`
 }
