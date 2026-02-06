@@ -1,0 +1,13 @@
+*.http
+
+.env.production
+.env.staging
+.env
+.env.local
+
+.idea
+.vscode
+
+
+*/__debug_bin*
+public

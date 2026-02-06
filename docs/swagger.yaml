@@ -1,0 +1,178 @@
+basePath: /
+definitions:
+  dto.JWT:
+    properties:
+      token:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        example: sosmed89@gmail.com
+        type: string
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.JWT'
+      message:
+        example: Data retrieved successfully
+        type: string
+      status:
+        example: Success
+        type: string
+    type: object
+  dto.RegisterRequest:
+    properties:
+      email:
+        example: sosmed89@gmail.com
+        type: string
+      password:
+        example: sosmed123
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.RegisterResponse:
+    properties:
+      message:
+        example: Data retrieved successfully
+        type: string
+      status:
+        example: Success
+        type: string
+    type: object
+  dto.ResponseError:
+    properties:
+      errors:
+        example: failed get data
+        type: string
+      message:
+        example: Failed get data
+        type: string
+      status:
+        example: Error
+        type: string
+    type: object
+  dto.ResponseSuccess:
+    properties:
+      message:
+        example: Data retrieved successfully
+        type: string
+      status:
+        example: Success
+        type: string
+    type: object
+host: localhost:8002
+info:
+  contact: {}
+  description: Backend Services For Coffee Morning
+  title: Coffee Morning Services
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: User login
+      tags:
+      - Auth
+  /auth/logout:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Logout user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      parameters:
+      - description: User registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Register new user
+      tags:
+      - Auth
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by space and JWT Token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
