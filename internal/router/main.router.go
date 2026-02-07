@@ -18,6 +18,8 @@ func Init(app *gin.Engine, db *pgxpool.Pool, rdb *redis.Client) {
 	app.Use(middleware.CORSMiddleware)
 	AuthRouter(app, db, rdb)
 	UserRouter(app, db, rdb)
+	InteractionRouter(app, db, rdb)
+
 	app.NoRoute(func(ctx *gin.Context) {
 		response.Error(ctx, http.StatusNotFound, "No route here, go to http://localhost:8002/swagger/index.html")
 	})

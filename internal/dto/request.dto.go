@@ -18,3 +18,9 @@ type UserRequest struct {
 	Avatar     string                `form:"avatar,omitempty" json:"avatar"`
 	Bio        string                `form:"bio,omitempty" json:"bio"`
 }
+
+type InteractionRequest struct {
+	ContentFile *multipart.FileHeader `form:"content_file,omitempty" json:"content_file"`
+	ContentName string                `form:"content_name,omitempty" json:"content_name"`
+	Caption     string                `form:"caption,omitempty" json:"caption"`
+}

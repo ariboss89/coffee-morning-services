@@ -171,6 +171,46 @@ paths:
       summary: Register new user
       tags:
       - Auth
+  /interaction/content:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new user account
+      parameters:
+      - description: Upload Content Image
+        in: formData
+        name: content_file
+        required: true
+        type: file
+      - description: Caption
+        in: formData
+        name: caption
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Post new content
+      tags:
+      - Interaction
   /user/:
     patch:
       consumes:

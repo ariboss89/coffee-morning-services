@@ -23,29 +23,6 @@ func NewAuthService(authRepository *repository.AuthRepository, rdb *redis.Client
 	return &AuthService{authRepository: authRepository, redis: rdb, db: db}
 }
 
-// func (a AuthService) Register(ctx context.Context, newUser dto.RegisterRequest) (dto.RegisterResponse, error) {
-// 	hc := hash.HashConfig{}
-// 	hc.UseRecommended()
-
-// 	hp, err := hc.GenHash(newUser.Password)
-// 	if err != nil {
-// 		return dto.RegisterResponse{}, err
-// 	}
-// 	newUser.Password = hp
-// 	if err := a.authRepository.Register(ctx, a.db, newUser); err != nil {
-// 		return dto.RegisterResponse{}, err
-// 	}
-
-// 	response := dto.RegisterResponse{
-// 		ResponseSuccess: dto.ResponseSuccess{
-// 			Message: "New Account Registered !",
-// 			Status:  "Success",
-// 		},
-// 	}
-
-// 	return response, nil
-// }
-
 func (a AuthService) Register(ctx context.Context, newUser dto.RegisterRequest) (dto.RegisterResponse, error) {
 	tx, err := a.db.Begin(ctx)
 
