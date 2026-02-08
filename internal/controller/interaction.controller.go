@@ -109,3 +109,114 @@ func (ic *InteractionController) PostContent(c *gin.Context) {
 		return
 	}
 }
+
+// Posts godoc
+//
+//	@Summary		Follow new user
+//	@Description	Follow a new user
+//	@Tags			Interaction
+//
+// @accept			 json
+// @Produce      json
+//
+//	@Param		follow	body		dto.FollowingRequest	true	"Follow new user"
+//	@Success		200		{object}	dto.RegisterResponse
+//	@Success		201		{object}	dto.RegisterResponse
+//	@Failure		401		{object}	dto.ResponseError
+//	@Failure		400		{object}	dto.ResponseError
+//	@Failure		500		{object}	dto.ResponseError
+//	@Router			/interaction/following [post]
+//
+// @Security			BearerAuth
+func (ic *InteractionController) FollowingUser(c *gin.Context) {
+	var follow dto.FollowingRequest
+
+	token, isExist := c.Get("token")
+	if !isExist {
+		c.AbortWithStatusJSON(http.StatusForbidden, dto.ResponseError{
+			Message: "Forbidden Access",
+			Status:  "Error",
+		})
+		return
+	}
+	accessToken, _ := token.(jwt.JWTClaims)
+
+	if err := c.ShouldBindJSON(&follow); err != nil {
+		response.Error(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	id := accessToken.Id
+
+	if id != 0 {
+		if err := ic.interactionService.FollowingUser(c.Request.Context(), follow, id); err != nil {
+			response.Error(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		response.Success(c, http.StatusOK, "Following User Success !!", nil)
+		return
+
+	} else {
+		c.AbortWithStatusJSON(http.StatusForbidden, dto.ResponseError{
+			Message: "Forbidden Access",
+			Status:  "Error",
+		})
+		return
+	}
+}
+
+// Posts godoc
+//
+//	@Summary		Like new posts
+//	@Description	Like new post
+//	@Tags			Interaction
+//
+// @accept			 json
+// @Produce      json
+//
+//	@Param		follow	body		dto.LikeRequest	true	"Like new posts"
+//	@Success		200		{object}	dto.RegisterResponse
+//	@Success		201		{object}	dto.RegisterResponse
+//	@Failure		401		{object}	dto.ResponseError
+//	@Failure		400		{object}	dto.ResponseError
+//	@Failure		500		{object}	dto.ResponseError
+//	@Router			/interaction/like [post]
+//
+// @Security			BearerAuth
+func (ic *InteractionController) LikePosts(c *gin.Context) {
+	var like dto.LikeRequest
+
+	token, isExist := c.Get("token")
+	if !isExist {
+		c.AbortWithStatusJSON(http.StatusForbidden, dto.ResponseError{
+			Message: "Forbidden Access",
+			Status:  "Error",
+		})
+		return
+	}
+	accessToken, _ := token.(jwt.JWTClaims)
+
+	if err := c.ShouldBindJSON(&like); err != nil {
+		response.Error(c, http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+
+	id := accessToken.Id
+
+	if id != 0 {
+		msg, err := ic.interactionService.LikePosts(c.Request.Context(), like, id)
+		if err != nil {
+			response.Error(c, http.StatusInternalServerError, "Internal Server Error")
+			return
+		}
+		response.Success(c, http.StatusOK, msg, nil)
+		return
+
+	} else {
+		c.AbortWithStatusJSON(http.StatusForbidden, dto.ResponseError{
+			Message: "Forbidden Access",
+			Status:  "Error",
+		})
+		return
+	}
+}

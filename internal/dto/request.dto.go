@@ -24,3 +24,17 @@ type InteractionRequest struct {
 	ContentName string                `form:"content_name,omitempty" json:"content_name"`
 	Caption     string                `form:"caption,omitempty" json:"caption"`
 }
+
+type FollowingRequest struct {
+	Following_Id int `json:"following_id"`
+}
+
+type LikeRequest struct {
+	Post_Id int `json:"post_id"`
+	User_Id int `json:"user_id"`
+}
+
+type CommentRequest struct {
+	Post_Id int `json:"post_id"`
+	User_Id int `json:"user_id"`
+}

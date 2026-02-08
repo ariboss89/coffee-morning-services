@@ -1,9 +1,21 @@
 basePath: /
 definitions:
+  dto.FollowingRequest:
+    properties:
+      following_id:
+        type: integer
+    type: object
   dto.JWT:
     properties:
       token:
         type: string
+    type: object
+  dto.LikeRequest:
+    properties:
+      post_id:
+        type: integer
+      user_id:
+        type: integer
     type: object
   dto.LoginRequest:
     properties:
@@ -74,7 +86,7 @@ definitions:
         example: Success
         type: string
     type: object
-host: localhost:8002
+host: 72.62.120.77:8081
 info:
   contact: {}
   description: Backend Services For Coffee Morning
@@ -190,6 +202,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
         "201":
           description: Created
           schema:
@@ -209,6 +225,86 @@ paths:
       security:
       - BearerAuth: []
       summary: Post new content
+      tags:
+      - Interaction
+  /interaction/following:
+    post:
+      consumes:
+      - application/json
+      description: Follow a new user
+      parameters:
+      - description: Follow new user
+        in: body
+        name: follow
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FollowingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Follow new user
+      tags:
+      - Interaction
+  /interaction/like:
+    post:
+      consumes:
+      - application/json
+      description: Like new post
+      parameters:
+      - description: Like new posts
+        in: body
+        name: follow
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LikeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Like new posts
       tags:
       - Interaction
   /user/:

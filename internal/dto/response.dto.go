@@ -27,3 +27,8 @@ type UserResponse struct {
 	Avatar string `json:"avatar"`
 	Bio    string `json:"bio"`
 }
+
+type FollowingReequest struct {
+	ResponseSuccess
+	Data string `json:"data"`
+}
